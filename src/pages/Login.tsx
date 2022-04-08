@@ -1,8 +1,25 @@
+import React from "react";
+import App from "../components/notifications/auth.notifications";
+import { registerWithEmailAndPassword } from "../models/auth.controller";
 
-export default function Login() {
-  return (
-    <>
-      <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+interface IProps {}
+interface IState {
+  email: string,
+  password: string
+}
+
+export default class Login extends React.Component<IProps, IState> { 
+  constructor(props: IProps) {
+    super(props);
+    this.state = {
+      email: "",
+      password: ""
+    }
+  }
+  render(): React.ReactNode {
+    return (
+      <>
+ <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div>
             <img
@@ -85,6 +102,7 @@ export default function Login() {
           </form>
         </div>
       </div>
-    </>
-  )
+      </>
+    );
+  }
 }

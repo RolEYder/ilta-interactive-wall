@@ -7,7 +7,7 @@ import {
 } from "../config/firebaseConfig";
 import { getTimeStamp } from "../helpers/helpers";
 import bcrypt from "bcryptjs";
-
+import { toast } from "../components/toast/ToastManagement";
 const registerWithEmailAndPassword = async (
   username: string,
   email: string,
@@ -16,7 +16,7 @@ const registerWithEmailAndPassword = async (
   try {
     const joined = getTimeStamp();
     let hashPassword = "";
-    const res = await createUserWithEmailAndPassword(auth, email, password);
+    const res = await createUserWithEmailAndPassword(auth, email, password)
     const user = res.user;
     bcrypt.hash(password, 10, (error: Object, hash: any) => {
       hashPassword = hash;
@@ -28,9 +28,17 @@ const registerWithEmailAndPassword = async (
         email,
         hashPassword,
       });
+      return user;
     });
   } catch (err) {
-    console.error(err);
+    if (err instanceof Error) {
+      toast.show({
+        title: "Error 😟. Unable to create the account",
+        content: err.message,
+        duration: 5000,
+      })
+        return err.message;
+    }
   }
 };
 

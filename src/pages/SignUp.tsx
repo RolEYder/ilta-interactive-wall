@@ -1,10 +1,11 @@
 import React from "react";
 import App from "../components/notifications/auth.notifications";
 import { registerWithEmailAndPassword } from "../models/auth.controller";
-
+import {getMessageFromErrorCode} from "../helpers/helpers"
 interface IProps {}
 
 interface IState {
+  hasError: Object; 
   username: string;
   email: string;
   password: string;
@@ -15,6 +16,7 @@ export default class SingUp extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
+      hasError: Object,
       username: "",
       email: "",
       password: "",
@@ -31,11 +33,15 @@ export default class SingUp extends React.Component<IProps, IState> {
       repeatPassword: this.state.repeatPassword,
     };
     console.log(data);
-    registerWithEmailAndPassword(
+    let res = registerWithEmailAndPassword(
       this.state.username,
       this.state.email,
       this.state.password
     );
+  if (res instanceof Error) {
+      console.log(res)
+  }
+    
   };
   render(): React.ReactNode {
     return (
