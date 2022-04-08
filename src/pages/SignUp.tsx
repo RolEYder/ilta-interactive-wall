@@ -1,11 +1,10 @@
 import React from "react";
 import App from "../components/notifications/auth.notifications";
 import { registerWithEmailAndPassword } from "../models/auth.controller";
-import {getMessageFromErrorCode} from "../helpers/helpers"
+import { toast } from "../components/toast/ToastManagement";
 interface IProps {}
 
 interface IState {
-  hasError: Object; 
   username: string;
   email: string;
   password: string;
@@ -16,7 +15,6 @@ export default class SingUp extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      hasError: Object,
       username: "",
       email: "",
       password: "",
@@ -24,24 +22,33 @@ export default class SingUp extends React.Component<IProps, IState> {
     };
   }
 
+  checkProperDataBeforeSubmit = () => {
+    if ((this.state.username.length < 5) === true) {
+      toast.show({
+        title: "Invalid username",
+        content: "You username must be at least of 6 characters",
+        duration: 5000,
+      });
+      return false;
+    } else if ((this.state.password === this.state.repeatPassword) !== true) {
+      toast.show({
+        title: "Invalid password",
+        content: "You passwords does not match, check it again",
+        duration: 5000,
+      });
+      return false;
+    }
+    return true;
+  };
   onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const data = {
-      username: this.state.username,
-      email: this.state.email,
-      password: this.state.password,
-      repeatPassword: this.state.repeatPassword,
-    };
-    console.log(data);
-    let res = registerWithEmailAndPassword(
-      this.state.username,
-      this.state.email,
-      this.state.password
-    );
-  if (res instanceof Error) {
-      console.log(res)
-  }
-    
+    if (this.checkProperDataBeforeSubmit() === true) {
+      registerWithEmailAndPassword(
+        this.state.username,
+        this.state.email,
+        this.state.password
+      );
+    }
   };
   render(): React.ReactNode {
     return (
@@ -125,7 +132,7 @@ export default class SingUp extends React.Component<IProps, IState> {
                     value={this.state.repeatPassword}
                     id="repeat-password"
                     name="repeat-password"
-                    type="repeat-password"
+                    type="password"
                     autoComplete="Password again"
                     required
                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
