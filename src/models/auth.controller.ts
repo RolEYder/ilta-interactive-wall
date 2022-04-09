@@ -1,13 +1,11 @@
-import {
+import  {
   auth,
-  db,
   createUserWithEmailAndPassword,
-  addDoc,
-  collection,
 } from "../config/firebaseConfig";
 import { getTimeStamp } from "../helpers/helpers";
 import bcrypt from "bcryptjs";
 import { toast } from "../components/toast/ToastManagement";
+import { getDatabase, ref, set } from "firebase/database";
 
 const registerWithEmailAndPassword = async (
   username: string,
@@ -21,13 +19,14 @@ const registerWithEmailAndPassword = async (
     const user = res.user;
     bcrypt.hash(password, 10, (error: Object, hash: any) => {
       hashPassword = hash;
-      addDoc(collection(db, "users"), {
+      const db = getDatabase();
+      set(ref(db, `users/${user.uid}`), {
         uid: user.uid,
         bio: "",
         joined: joined,
-        username,
-        email,
-        hashPassword,
+       username: username,
+        email: email,
+        password: hashPassword,
       })
       return user;
     });
