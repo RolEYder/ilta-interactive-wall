@@ -2,6 +2,8 @@ import React from "react";
 import App from "../components/notifications/auth.notifications";
 import { registerWithEmailAndPassword } from "../models/auth.controller";
 import { toast } from "../components/toast/ToastManagement";
+import SignUpModal from "../components/modals/signUpModal";
+
 interface IProps {}
 
 interface IState {
@@ -9,6 +11,7 @@ interface IState {
   email: string;
   password: string;
   repeatPassword: string;
+  wasSuccess: boolean
 }
 
 export default class SingUp extends React.Component<IProps, IState> {
@@ -19,6 +22,7 @@ export default class SingUp extends React.Component<IProps, IState> {
       email: "",
       password: "",
       repeatPassword: "",
+      wasSuccess: false
     };
   }
 
@@ -43,17 +47,24 @@ export default class SingUp extends React.Component<IProps, IState> {
   onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (this.checkProperDataBeforeSubmit() === true) {
-      registerWithEmailAndPassword(
+     let res  =  registerWithEmailAndPassword(
         this.state.username,
         this.state.email,
         this.state.password
       );
+      res.then(value=> {
+        
+        this.setState({wasSuccess: true})
+      })
+       
     }
   };
   render(): React.ReactNode {
+    if (this.state.wasSuccess === true) {
+      <SignUpModal willOpen={true} title={"The account was created successfully"} content={"Click on the button to log in"}/>
+    }
     return (
       <>
-        <App></App>
         <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-md w-full space-y-8">
             <div>

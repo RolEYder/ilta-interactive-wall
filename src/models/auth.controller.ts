@@ -8,6 +8,7 @@ import {
 import { getTimeStamp } from "../helpers/helpers";
 import bcrypt from "bcryptjs";
 import { toast } from "../components/toast/ToastManagement";
+
 const registerWithEmailAndPassword = async (
   username: string,
   email: string,
@@ -27,7 +28,7 @@ const registerWithEmailAndPassword = async (
         username,
         email,
         hashPassword,
-      });
+      })
       return user;
     });
   } catch (err) {
