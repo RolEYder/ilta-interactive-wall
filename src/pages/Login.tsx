@@ -1,13 +1,18 @@
 import React from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Navigate } from "react-router";
-import SuccessNotify from "../components/notifications/notifications";
+import { getMessageFromErrorCode } from "../helpers/helpers";
+import { XIcon } from "@heroicons/react/outline";
+
 interface IProps {}
 interface IState {
   email: string;
   password: string;
   isLogged: boolean;
   hasError: boolean;
+  errorCode: string;
+  open: boolean;
+  isRemember: boolean;
 }
 
 export default class Login extends React.Component<IProps, IState> {
@@ -18,6 +23,9 @@ export default class Login extends React.Component<IProps, IState> {
       password: "",
       isLogged: false,
       hasError: false,
+      errorCode: "",
+      open: false,
+      isRemember: false,
     };
   }
 
@@ -32,12 +40,14 @@ export default class Login extends React.Component<IProps, IState> {
       .then((response) => {
         response.user.getIdToken().then((res) => {
           sessionStorage.setItem("Auth Token", res);
+          if (this.state.isRemember) {
+          }
           this.setState({ isLogged: true });
         });
       })
       .catch((err) => {
-        this.setState({ hasError: true });
-        console.log(err);
+        this.setState({ hasError: true, errorCode: err.code, open: true });
+        console.log(this.state.isRemember);
       });
   };
   render(): React.ReactNode {
@@ -46,13 +56,6 @@ export default class Login extends React.Component<IProps, IState> {
     return (
       <>
         {isLogged ? <Navigate to="/" /> : null}
-        {hasError ? (
-          <SuccessNotify
-            title="Error to login"
-            content="Error To login"
-            type="error"
-          />
-        ) : null}
 
         <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-md w-full space-y-8">
@@ -109,6 +112,9 @@ export default class Login extends React.Component<IProps, IState> {
                 <div className="flex items-center">
                   <input
                     id="remember-me"
+                    onChange={(e) =>
+                      this.setState({ isRemember: e.target.checked })
+                    }
                     name="remember-me"
                     type="checkbox"
                     className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
@@ -130,6 +136,36 @@ export default class Login extends React.Component<IProps, IState> {
                   </a>
                 </div>
               </div>
+
+              {hasError ? (
+                <div className="bg-indigo-600">
+                  <div className="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between flex-wrap">
+                      <div className="w-0 flex-1 flex items-center">
+                        <p className="ml-3 font-medium text-white truncate">
+                          <span className="md:hidden">Error</span>
+                          <span className="hidden md:inline">
+                            {getMessageFromErrorCode(this.state.errorCode)}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
+                        <button
+                          type="button"
+                          onClick={() => this.setState({ hasError: false })}
+                          className="-mr-1 flex p-2 rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-white sm:-mr-2"
+                        >
+                          <span className="sr-only">Dismiss</span>
+                          <XIcon
+                            className="h-6 w-6 text-white"
+                            aria-hidden="true"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
 
               <div>
                 <button
