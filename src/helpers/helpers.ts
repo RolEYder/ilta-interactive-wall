@@ -41,6 +41,6 @@ const getMessageFromErrorCode = (errorCode: string) => {
       return "Login failed. Please try again.";
       break;
   }
-}
+};
 
 export { getTimeStamp, getMessageFromErrorCode };

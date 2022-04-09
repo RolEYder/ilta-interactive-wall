@@ -1,5 +1,4 @@
 import React from "react";
-import App from "../components/notifications/auth.notifications";
 import { registerWithEmailAndPassword } from "../models/auth.controller";
 import { toast } from "../components/toast/ToastManagement";
 import SignUpModal from "../components/modals/signUpModal";

@@ -1,15 +1,9 @@
-import React from 'react';
-import MainRouter from './MainRouter';
-import { hot } from 'react-hot-loader';
-import './App.css';
-import {BrowserRouter} from 'react-router-dom'
+import MainRouter from "./MainRouter";
+import { hot } from "react-hot-loader";
+import "./App.css";
 
 function App() {
-  return (
-    
-    <MainRouter/>
-
-  );
+  return <MainRouter />;
 }
 
-export default hot(module)(App)
+export default hot(module)(App);

@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, BrowserRouter, Routes } from "react-router-dom"
 
 import Login from "./pages/Login";
@@ -10,9 +9,9 @@ export default function MainRouter() {
             <div>
                 <BrowserRouter>
                     <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/signup" element={<SingUp />} />
+                        <Route exact path="/" element={<Home />} />
+                        <Route exact path="/login" element={<Login />} />
+                        <Route exact path="/signup" element={<SingUp />} />
                     </Routes>
                 </BrowserRouter>
             </div>
