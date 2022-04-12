@@ -1,12 +1,26 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "firebase/auth";
-import { getFirestore, getDocs, query, collection, where, addDoc } from "firebase/firestore"
-import { getDatabase, ref, child, set } from "firebase/database"
-import { onAuthStateChanged } from "firebase/auth"
+import {
+    getAuth,
+    signInWithPopup,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    sendPasswordResetEmail,
+    signOut,
+} from "firebase/auth";
+import {
+    getFirestore,
+    getDocs,
+    query,
+    collection,
+    where,
+    addDoc,
+} from "firebase/firestore";
+import { getDatabase, ref, child, set } from "firebase/database";
+import { onAuthStateChanged } from "firebase/auth";
 import { useContext, createContext, useEffect, useState } from "react";
 
-export const AuthContext = createContext()
+export const AuthContext = createContext();
 
 const firebaseConfig = {
     apiKey: "AIzaSyAqKsoULF8ZzX2vqJEV4gRANumeyuqdQQc",
@@ -27,28 +41,38 @@ const firebaseConfig = {
 };
 
 
-
-export const AuthContextProvider = props => {
-    const [user, setUser] = useState()
-    const [error, setError] = useState()
+export const AuthContextProvider = (props) => {
+    const [user, setUser] = useState();
+    const [error, setError] = useState();
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(getAuth(), setUser, setError)
-        return () => unsubscribe()
-    }, [])
+        const unsubscribe = getAuth().onAuthStateChanged(setUser, setError)
+        return () => unsubscribe();
+    }, []);
     return <AuthContext.Provider value = {
         { user, error }
     } {...props }
-    />
-}
+    />;
+};
 
 export const useAuthState = () => {
-        const authUser = useContext(AuthContext)
-        return {...authUser, isAuthenticated: auth.user != null }
-    }
-    // Initialize Firebase
+    const authUser = useContext(AuthContext);
+    console.log(auth.user);
+    return {...authUser, isAuthenticated: authUser.user != null };
+};
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const database = getDatabase(app);
-export { app, auth, db, createUserWithEmailAndPassword, addDoc, collection, database, ref, set }
+export {
+    app,
+    auth,
+    db,
+    createUserWithEmailAndPassword,
+    addDoc,
+    collection,
+    database,
+    ref,
+    set,
+};

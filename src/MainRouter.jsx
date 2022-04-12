@@ -6,8 +6,6 @@ import SingUp from "./pages/SignUp";
 import Home from "./pages/Home";
 import Explore from "./pages/Explore"
 import NotFoundPage from "./pages/404";
-
-import { isAuthenticated as authController } from "./components/auth/isAuthenticated";
 import { Navigate, } from "react-router";
 import { AuthContextProvider, useAuthState } from "./config/firebaseConfig";
 
