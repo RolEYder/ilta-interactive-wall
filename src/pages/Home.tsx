@@ -2,7 +2,7 @@
 import { Fragment } from "react";
 import Header from "../components/partials/Header";
 
-export default function Example() {
+export default function Home() {
   return (
     <>
       {/*

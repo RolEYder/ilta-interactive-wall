@@ -5,9 +5,10 @@ import Main from "./pages/Main";
 import SingUp from "./pages/SignUp";
 import Home from "./pages/Home";
 import Explore from "./pages/Explore"
+import NotFoundPage from "./pages/404";
+
 import { isAuthenticated as authController } from "./components/auth/isAuthenticated";
 import { Navigate, } from "react-router";
-
 import { AuthContextProvider, useAuthState } from "./config/firebaseConfig";
 
 
@@ -34,6 +35,7 @@ export default function MainRouter() {
               <Route exact path="/signup" element={<UnauthenticatedRoute Children={<SingUp />} />} />
               <Route exact path="/home" element={<AuthenticatedRoute Children={<Home />} />} />
               <Route exact path="/explore" element={<AuthenticatedRoute Children={<Explore />} />} />
+              <Route path="*" element={<NotFoundPage/>}/>
             </Routes>
           </BrowserRouter>
 
