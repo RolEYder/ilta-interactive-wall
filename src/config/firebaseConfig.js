@@ -40,24 +40,21 @@ const firebaseConfig = {
     measurementId: "G-G1MNG0GNH6",
 };
 
-
 export const AuthContextProvider = (props) => {
     const [user, setUser] = useState();
     const [error, setError] = useState();
 
     useEffect(() => {
-        const unsubscribe = getAuth().onAuthStateChanged(setUser, setError)
+        const unsubscribe = getAuth().onAuthStateChanged(setUser, setError);
         return () => unsubscribe();
     }, []);
     return <AuthContext.Provider value = {
-        { user, error }
-    } {...props }
+        { user, error } } {...props }
     />;
 };
 
 export const useAuthState = () => {
     const authUser = useContext(AuthContext);
-    console.log(auth.user);
     return {...authUser, isAuthenticated: authUser.user != null };
 };
 // Initialize Firebase
