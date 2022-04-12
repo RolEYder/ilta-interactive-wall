@@ -13,8 +13,7 @@ const navigation = [
   { name: "Explore", href: "/explore", current: 3 },
 ];
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
+  { name: "Your Profile", href: "/profile" },
   { name: "Sign out", href: "#" },
 ];
 
@@ -22,7 +21,7 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Example() {
+export default function Headeer() {
   return (
     <>
       <Disclosure as="nav" className="bg-gray-800">

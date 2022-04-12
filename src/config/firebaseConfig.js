@@ -19,7 +19,8 @@ import {
 import { getDatabase, ref, child, set } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import { useContext, createContext, useEffect, useState } from "react";
-
+import 'firebase/storage'
+import { getStorage } from "firebase/storage";
 export const AuthContext = createContext();
 
 const firebaseConfig = {
@@ -49,7 +50,8 @@ export const AuthContextProvider = (props) => {
         return () => unsubscribe();
     }, []);
     return <AuthContext.Provider value = {
-        { user, error } } {...props }
+        { user, error }
+    } {...props }
     />;
 };
 
@@ -61,8 +63,10 @@ export const useAuthState = () => {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage();
 const database = getDatabase(app);
 export {
+    storage,
     app,
     auth,
     db,
