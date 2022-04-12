@@ -3,6 +3,10 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from "firebase/auth";
 import { getFirestore, getDocs, query, collection, where, addDoc } from "firebase/firestore"
 import { getDatabase, ref, child, set } from "firebase/database"
+import { onAuthStateChanged } from "firebase/auth"
+import { useContext, createContext, useEffect, useState } from "react";
+
+export const AuthContext = createContext()
 
 const firebaseConfig = {
     apiKey: "AIzaSyAqKsoULF8ZzX2vqJEV4gRANumeyuqdQQc",
@@ -22,7 +26,27 @@ const firebaseConfig = {
     measurementId: "G-G1MNG0GNH6",
 };
 
-// Initialize Firebase
+
+
+export const AuthContextProvider = props => {
+    const [user, setUser] = useState()
+    const [error, setError] = useState()
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(getAuth(), setUser, setError)
+        return () => unsubscribe()
+    }, [])
+    return <AuthContext.Provider value = {
+        { user, error }
+    } {...props }
+    />
+}
+
+export const useAuthState = () => {
+        const authUser = useContext(AuthContext)
+        return {...authUser, isAuthenticated: auth.user != null }
+    }
+    // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
