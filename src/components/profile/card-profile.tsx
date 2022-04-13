@@ -12,21 +12,24 @@ export default function CardProfile(props: IProps) {
   const [following, setFollowing] = useState(0);
   const CURRENT_USER = getAuth().currentUser;
 
-  useEffect(() => {
+
+  function gettingNumberOfPost() {
     const db = getDatabase();
     const reference = ref(db, "posts/");
     let counter = 0;
     onValue(reference, (snapshot) => {
       snapshot.forEach((snap) => {
-      if(snap.val().user === CURRENT_USER?.uid) {
-        counter++; 
-        setPosts(counter)
-      }
-      console.log(snap.val().user)
+        if (snap.val().user === CURRENT_USER?.uid) {
+          counter++;
+          setPosts(counter)
+        }
       });
     });
-  }, [CURRENT_USER?.uid]);
-  
+  }
+  useEffect(() => {
+    gettingNumberOfPost();
+  });
+
   return (
     <>
       <div className="shadow-lg rounded-2xl  w-80 h-80 justify-center bg-white dark:bg-gray-800">
