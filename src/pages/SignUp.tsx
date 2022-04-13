@@ -3,14 +3,14 @@ import { registerWithEmailAndPassword } from "../models/auth.controller";
 import { toast } from "../components/toast/ToastManagement";
 import SignUpModal from "../components/modals/signUpModal";
 
-interface IProps {}
+interface IProps { }
 
 interface IState {
   username: string;
   email: string;
   password: string;
   repeatPassword: string;
-  wasSuccess: boolean
+  wasSuccess: boolean;
 }
 
 export default class SingUp extends React.Component<IProps, IState> {
@@ -21,12 +21,18 @@ export default class SingUp extends React.Component<IProps, IState> {
       email: "",
       password: "",
       repeatPassword: "",
-      wasSuccess: false
+      wasSuccess: false,
     };
   }
+  componentDidMount =  () => {
+    let authToken = sessionStorage.getItem("Auth Token");
+    if (authToken) {
+      window.location.href = "/home";
+    }
+  };
 
   checkProperDataBeforeSubmit = () => {
-    if ((this.state.username.length < 5) === true) {
+    if (this.state.username.length < 5 === true) {
       toast.show({
         title: "Invalid username",
         content: "You username must be at least of 6 characters",
@@ -46,21 +52,23 @@ export default class SingUp extends React.Component<IProps, IState> {
   onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (this.checkProperDataBeforeSubmit() === true) {
-     let res  =  registerWithEmailAndPassword(
+      let res = registerWithEmailAndPassword(
         this.state.username,
         this.state.email,
         this.state.password
       );
-      res.then(value=> {
-        
-        this.setState({wasSuccess: true})
-      })
-       
+      res.then((value) => {
+        this.setState({ wasSuccess: true });
+      });
     }
   };
   render(): React.ReactNode {
     if (this.state.wasSuccess === true) {
-      <SignUpModal willOpen={true} title={"The account was created successfully"} content={"Click on the button to log in"}/>
+      <SignUpModal
+        willOpen={true}
+        title={"The account was created successfully"}
+        content={"Click on the button to log in"}
+      />;
     }
     return (
       <>

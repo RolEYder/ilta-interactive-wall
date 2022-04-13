@@ -30,7 +30,12 @@ export default class Explore extends React.Component<IProps, IState> {
       this.setState({ usersData: values });
     });
   };
-  componentDidMount = async () => {};
+  componentDidMount = () => {
+    let authToken = sessionStorage.getItem("Auth Token");
+    if (!authToken) {
+      window.location.href = "/";
+    }
+  };
   render(): React.ReactNode {
     // let data = this.state.usersData.en(e =>
     //     <ExploreList {...e} />

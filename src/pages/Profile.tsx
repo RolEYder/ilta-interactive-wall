@@ -1,8 +1,9 @@
 import React from "react";
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref, onValue,  update } from "firebase/database";
+import { getDatabase, ref, onValue, update } from "firebase/database";
 import { XIcon } from "@heroicons/react/outline";
 import Header from "../components/partials/Header";
+import CardProfile from "../components/profile/card-profile";
 import {
   getDownloadURL,
   getStorage,
@@ -10,7 +11,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import "firebase/compat/storage";
-interface IProps { }
+interface IProps {}
 interface IState {
   username: string;
   bio: string;
@@ -18,10 +19,10 @@ interface IState {
   urlImage: string;
   isPhoto: boolean;
   hasError: boolean;
+  panelPhoto: any;
   err: string;
 }
 const CURRENT_USER = getAuth().currentUser;
-
 export default class Profile extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
@@ -31,19 +32,28 @@ export default class Profile extends React.Component<IProps, IState> {
       photo: null,
       urlImage: "",
       isPhoto: false,
+      panelPhoto: null,
       hasError: false,
       err: "",
     };
   }
+
   componentDidMount = async () => {
+    let authToken = sessionStorage.getItem("Auth Token");
+    if (!authToken) {
+      window.location.href = "/";
+    }
     const db = getDatabase();
     const startRef = await ref(db, `users/${CURRENT_USER?.uid}`);
     const storage = await getStorage();
-    const spaceRef = await storageReference(storage, `users/${CURRENT_USER?.uid}`)
-    getDownloadURL(spaceRef).then(url => {
-      this.setState({ urlImage: url })
-    })
-    onValue(startRef, (snapshot) => {
+    const spaceRef = await storageReference(
+      storage,
+      `users/${CURRENT_USER?.uid}`
+    );
+    getDownloadURL(spaceRef).then((url) => {
+      this.setState({ urlImage: url });
+    });
+    await onValue(startRef, (snapshot) => {
       const data = snapshot.val();
       this.setState({ username: data.username, bio: data.bio });
       console.log(data);
@@ -58,10 +68,10 @@ export default class Profile extends React.Component<IProps, IState> {
     isPhoto: false,
     hasError: false,
     err: "",
-  })
+  });
   componentWillUnmount = () => {
-    this.setState(this.getInititalStates())
-  }
+    this.setState(this.getInititalStates());
+  };
 
   isImage = (file: any) => {
     return file && file["type"].split("/")[0] === "image";
@@ -74,7 +84,6 @@ export default class Profile extends React.Component<IProps, IState> {
         urlImage: URL.createObjectURL(e.target.files[0]),
       });
       this.setState({ isPhoto: true });
-
     } else {
       this.setState({
         hasError: true,
@@ -88,15 +97,12 @@ export default class Profile extends React.Component<IProps, IState> {
     const db = getDatabase();
     update(ref(db, `users/${CURRENT_USER?.uid}`), {
       username: this.state.username,
-      bio: this.state.bio
+      bio: this.state.bio,
     });
 
     // saving image
     const storage = getStorage();
-    const reference = storageReference(
-      storage,
-      `users/${CURRENT_USER?.uid}`
-    );
+    const reference = storageReference(storage, `users/${CURRENT_USER?.uid}`);
     const upload = uploadBytesResumable(reference, this.state.photo);
     upload.on(
       "state_changed",
@@ -127,6 +133,12 @@ export default class Profile extends React.Component<IProps, IState> {
             <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
           </div>
         </header>
+        <div className="container  content-center grid justify-center mx-auto">
+          <CardProfile
+            urlImage={this.state.urlImage}
+            username={this.state.username}
+          />
+        </div>
         <div className="container mx-auto flex">
           <div className="mx-4 top-px flex justify-center ">
             <div className="min-h-full">
@@ -281,8 +293,6 @@ export default class Profile extends React.Component<IProps, IState> {
               <div className="border-t border-gray-200" />
             </div>
           </div>
-
-
         </div>
       </>
     );

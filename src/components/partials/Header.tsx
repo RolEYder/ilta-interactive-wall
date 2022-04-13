@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
-import OtherHeader from "./OtherHeader"
+import {Link} from "react-router-dom"
 const user = {
   name: "Tom Cook",
   email: "tom@example.com",
@@ -19,6 +19,11 @@ const userNavigation = [
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
+}
+
+function SignOut() {
+  sessionStorage.removeItem("Auth Token");
+  window.location.href = "/"
 }
 
 export default function Headeer() {
@@ -66,11 +71,20 @@ export default function Headeer() {
                       <span className="sr-only">View notifications</span>
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
                     </button>
+                    <a
+                      type="button"
+                      onClick={() => SignOut()}
+                      className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Sign Out
+                    </a>
 
                     {/* Profile dropdown */}
                     <Menu as="div" className="ml-3 relative">
                       <div>
-                        <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                       <Link to="/profile" replace={true}>
+
+                       <Menu.Button  className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                           <span className="sr-only">Open user menu</span>
                           <img
                             className="h-8 w-8 rounded-full"
@@ -78,6 +92,8 @@ export default function Headeer() {
                             alt=""
                           />
                         </Menu.Button>
+                       </Link>
+                       
                       </div>
                       <Transition
                         as={Fragment}
@@ -168,16 +184,21 @@ export default function Headeer() {
                   </button>
                 </div>
                 <div className="mt-3 px-2 space-y-1">
-                  {userNavigation.map((item) => (
-                    <Disclosure.Button
-                      key={item.name}
+                   <Disclosure.Button
                       as="a"
-                      href={item.href}
+                      href="/profile"
                       className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
                     >
-                      {item.name}
+                      Your Profile
                     </Disclosure.Button>
-                  ))}
+                    <a
+                    
+                    
+                      onClick={() => SignOut()}                      
+                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+                    >
+                      Sign Out
+                    </a>
                 </div>
               </div>
             </Disclosure.Panel>

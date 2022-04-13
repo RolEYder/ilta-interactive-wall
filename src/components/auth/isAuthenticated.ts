@@ -1,9 +1,21 @@
 import { getAuth } from "firebase/auth";
 
-let user = getAuth().currentUser;
+
 function getAuthentication() {
-  if (user != null) {
+ const session =  sessionStorage.getItem("Auth Token")
+  if (session) {
     return true;
   } else  return false;
 }
-export { getAuthentication };
+
+async function IsLogged() {
+  getAuth().onAuthStateChanged(user => {
+    if (user) {
+      console.log(user)
+      return true;
+    } else {
+      return false;
+    }
+  })
+}
+export { getAuthentication, IsLogged };

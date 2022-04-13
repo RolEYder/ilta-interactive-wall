@@ -41,6 +41,8 @@ const firebaseConfig = {
     measurementId: "G-G1MNG0GNH6",
 };
 
+
+
 export const AuthContextProvider = (props) => {
     const [user, setUser] = useState();
     const [error, setError] = useState();

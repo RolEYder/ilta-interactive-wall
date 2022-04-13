@@ -1,12 +1,23 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from "react";
+import React, { useEffect, Fragment } from "react";
 import Header from "../components/partials/Header";
 import Modal from "../components/modals/Modal";
 import CreatePost from "../components/posts/create-post";
 import useModal from "../hooks/useModal";
+import { useNavigate } from 'react-router-dom'
+
 export default function Home() {
   const { showModal, hideModal, visible } = useModal();
-
+  let navigate = useNavigate();
+  useEffect(() => {
+    let authToken = sessionStorage.getItem('Auth Token')
+    if (authToken) {
+      navigate("/home")
+    }
+    if (!authToken) {
+      navigate("/")
+    }
+  }, [])
   return (
     <>
       <div className="min-h-full">

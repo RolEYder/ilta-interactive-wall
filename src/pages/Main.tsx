@@ -1,8 +1,9 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { AnnotationIcon, GlobeAltIcon, LightningBoltIcon, ScaleIcon } from '@heroicons/react/outline'
+import { useNavigate } from 'react-router'
 const navigation = [
   { name: 'Feactures', href: '#' }
 ]
@@ -34,6 +35,16 @@ const features = [
     },
   ]
 export default function Main() {
+  let navigate = useNavigate();
+  useEffect(() => {
+    let authToken = sessionStorage.getItem('Auth Token')
+    if (authToken) {
+      navigate("/home")
+    }
+    if (!authToken) {
+      navigate("/")
+    }
+  }, [])
   return (
       <>
     <div className="relative bg-white overflow-hidden">

@@ -1,8 +1,8 @@
 import React from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { Navigate } from "react-router";
 import { getMessageFromErrorCode } from "../helpers/helpers";
 import { XIcon } from "@heroicons/react/outline";
+import { Navigate } from "react-router-dom";
 
 interface IProps {}
 interface IState {
@@ -28,7 +28,13 @@ export default class Login extends React.Component<IProps, IState> {
       isRemember: false,
     };
   }
-
+  componentDidMount = () => {
+    let authToken = sessionStorage.getItem("Auth Token");
+    if (authToken) {
+      window.location.href = "/home";
+    }
+  
+  };
   onsubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const authentication = getAuth();
@@ -55,7 +61,7 @@ export default class Login extends React.Component<IProps, IState> {
     const hasError = this.state.hasError;
     return (
       <>
-        {isLogged ? <Navigate to="/" /> : null}
+        {isLogged ? <Navigate to="/home" replace={true} /> : null}
 
         <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-md w-full space-y-8">
