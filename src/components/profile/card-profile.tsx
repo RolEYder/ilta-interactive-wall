@@ -1,9 +1,32 @@
+import React, { useEffect, useState } from "react";
+import { getAuth } from "firebase/auth";
+import { getDatabase, onValue, ref } from "firebase/database";
 interface IProps {
   urlImage?: string;
   username?: string;
 }
 
 export default function CardProfile(props: IProps) {
+  const [posts, setPosts] = useState(0);
+  const [follow, setFollow] = useState(0);
+  const [following, setFollowing] = useState(0);
+  const CURRENT_USER = getAuth().currentUser;
+
+  useEffect(() => {
+    const db = getDatabase();
+    const reference = ref(db, "posts/");
+    let counter = 0;
+    onValue(reference, (snapshot) => {
+      snapshot.forEach((snap) => {
+      if(snap.val().user === CURRENT_USER?.uid) {
+        counter++; 
+        setPosts(counter)
+      }
+      console.log(snap.val().user)
+      });
+    });
+  }, [CURRENT_USER?.uid]);
+  
   return (
     <>
       <div className="shadow-lg rounded-2xl  w-80 h-80 justify-center bg-white dark:bg-gray-800">
@@ -28,7 +51,7 @@ export default function CardProfile(props: IProps) {
             <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-200">
               <p className="flex flex-col">
                 Posts
-                <span className="text-black dark:text-white font-bold">34</span>
+                <span className="text-black dark:text-white font-bold">{posts}</span>
               </p>
               <p className="flex flex-col">
                 Followers

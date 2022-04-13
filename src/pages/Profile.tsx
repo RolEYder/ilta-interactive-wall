@@ -11,7 +11,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import "firebase/compat/storage";
-interface IProps {}
+interface IProps { }
 interface IState {
   username: string;
   bio: string;
@@ -22,7 +22,7 @@ interface IState {
   panelPhoto: any;
   err: string;
 }
-const CURRENT_USER = getAuth().currentUser;
+
 export default class Profile extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
@@ -38,28 +38,32 @@ export default class Profile extends React.Component<IProps, IState> {
     };
   }
 
-  componentDidMount = async () => {
+  loadProfile = () => {
+    const CURRENT_USER = getAuth().currentUser;
     let authToken = sessionStorage.getItem("Auth Token");
     if (!authToken) {
       window.location.href = "/";
     }
     const db = getDatabase();
-    const startRef = await ref(db, `users/${CURRENT_USER?.uid}`);
-    const storage = await getStorage();
-    const spaceRef = await storageReference(
+    const startRef =  ref(db, `users/${CURRENT_USER?.uid}`);
+    const storage =  getStorage();
+    const spaceRef =  storageReference(
       storage,
       `users/${CURRENT_USER?.uid}`
     );
     getDownloadURL(spaceRef).then((url) => {
       this.setState({ urlImage: url });
     });
-    await onValue(startRef, (snapshot) => {
+     onValue(startRef, (snapshot) => {
       const data = snapshot.val();
       this.setState({ username: data.username, bio: data.bio });
       console.log(data);
     });
+  }
+  componentDidMount =  () => {
+   this.loadProfile();
   };
-
+ 
   getInititalStates = () => ({
     username: "",
     bio: "",
@@ -69,9 +73,7 @@ export default class Profile extends React.Component<IProps, IState> {
     hasError: false,
     err: "",
   });
-  componentWillUnmount = () => {
-    this.setState(this.getInititalStates());
-  };
+
 
   isImage = (file: any) => {
     return file && file["type"].split("/")[0] === "image";
@@ -93,6 +95,7 @@ export default class Profile extends React.Component<IProps, IState> {
     console.log(this.state);
   };
   onsubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const CURRENT_USER = getAuth().currentUser;
     e.preventDefault();
     const db = getDatabase();
     update(ref(db, `users/${CURRENT_USER?.uid}`), {
