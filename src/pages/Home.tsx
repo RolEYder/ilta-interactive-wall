@@ -19,6 +19,7 @@ export default function Home() {
   const { showModal, hideModal, visible } = useModal();
   const [post, setPost] = useState([]);
   const [photo, setPhoto] = useState([""]);
+  const [loading, setLoading] = useState(false);
   let navigate = useNavigate();
   function isLogged() {
     let authToken = sessionStorage.getItem("Auth Token");
@@ -32,6 +33,7 @@ export default function Home() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getAllPost = () => {
+    setLoading(true)
     const db = getDatabase();
     const reference = ref(db, "posts/");
     onValue(reference, (snapshot) => {
@@ -62,7 +64,11 @@ export default function Home() {
           );
         }
       });
+      setTimeout(() => {
       setPost(values);
+      setLoading(false)
+      }, 2000);
+      
       console.log(photo);
     });
   };
@@ -89,6 +95,7 @@ export default function Home() {
             >
               Create Post
             </button>
+
             <Modal visible={visible}>
               <CreatePost />
               <button
@@ -100,7 +107,22 @@ export default function Home() {
               </button>
             </Modal>
           </div>
-          <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+          {loading? (<div className="border border-blue-300 shadow rounded-md p-4 mx-4 md:mx-auto my-5 max-w-md md:max-w-2xlmax-w-sm w-full mx-auto">
+            <div className="animate-pulse flex space-x-4">
+              <div className="rounded-full bg-slate-700 h-10 w-10"></div>
+              <div className="flex-1 space-y-6 py-1">
+                <div className="h-2 bg-slate-700 rounded"></div>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="h-2 bg-slate-700 rounded col-span-2"></div>
+                    <div className="h-2 bg-slate-700 rounded col-span-1"></div>
+                  </div>
+                  <div className="h-2 bg-slate-700 rounded"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          ):(<div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {/* Replace with your content */}
             {post.map((v: any, i) => (
               <PostList
@@ -113,7 +135,8 @@ export default function Home() {
               />
             ))}
             {/* /End replace */}
-          </div>
+          </div>)}
+          
         </main>
       </div>
     </>
