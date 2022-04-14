@@ -1,23 +1,74 @@
 /* This example requires Tailwind CSS v2.0+ */
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import Header from "../components/partials/Header";
 import Modal from "../components/modals/Modal";
 import CreatePost from "../components/posts/create-post";
 import useModal from "../hooks/useModal";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import PostList from "../components/posts/post-list";
+import { getDatabase, onValue, ref } from "firebase/database";
+
+import {
+  FirebaseStorage,
+  getDownloadURL,
+  getStorage,
+  ref as storageReference,
+} from "firebase/storage";
 
 export default function Home() {
   const { showModal, hideModal, visible } = useModal();
+  const [post, setPost] = useState([]);
+  const [photo, setPhoto] = useState([""]);
   let navigate = useNavigate();
-  useEffect(() => {
-    let authToken = sessionStorage.getItem('Auth Token')
+  function isLogged() {
+    let authToken = sessionStorage.getItem("Auth Token");
     if (authToken) {
-      navigate("/home")
+      navigate("/home");
     }
     if (!authToken) {
-      navigate("/")
+      navigate("/");
     }
-  }, [])
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const getAllPost = () => {
+    const db = getDatabase();
+    const reference = ref(db, "posts/");
+    onValue(reference, (snapshot) => {
+      let values: any = [];
+      snapshot.forEach((snap) => {
+        values.push(snap.val());
+      });
+
+      //soring by timestamp
+      values.sort(function (x: any, y: any) {
+        return y.post_time - x.post_time;
+      });
+      // eslint-disable-next-line array-callback-return
+      values.map((v: any) => {
+        if (v.photoUser != null || v.photoUser != null || v.photoUser !== "") {
+          const storage = getStorage();
+          const photoRef = storageReference(storage, `${v.photoUser}`);
+          getDownloadURL(photoRef)
+            .then((url) => {
+              photo.push(url);
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        } else {
+          photo.push(
+            "https://images.unsplash.com/photo-1542156822-6924d1a71ace?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+          );
+        }
+      });
+      setPost(values);
+      console.log(photo);
+    });
+  };
+  useEffect(() => {
+    getAllPost();
+  }, []);
   return (
     <>
       <div className="min-h-full">
@@ -49,11 +100,18 @@ export default function Home() {
               </button>
             </Modal>
           </div>
-          <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {/* Replace with your content */}
-            <div className="px-4 py-6 sm:px-0">
-              <div className="border-4 border-dashed border-gray-200 rounded-lg h-96" />
-            </div>
+            {post.map((v: any, i) => (
+              <PostList
+                key={v.uid}
+                photo={photo[i]}
+                username={v.username}
+                contect={v.content}
+                timeago={v.post_time}
+                joined={v.joinedUser}
+              />
+            ))}
             {/* /End replace */}
           </div>
         </main>

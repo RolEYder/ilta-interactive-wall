@@ -1,7 +1,9 @@
 import Header from "../components/partials/Header";
 import ExploreList from "../components/explore/explore-list";
 import React from "react";
+
 import { getDatabase, ref, onValue } from "firebase/database";
+import { get_explores } from "../actions/explore-action";
 
 interface IProps {}
 interface IState {
@@ -9,6 +11,8 @@ interface IState {
   isFollowing: false;
   usersData: any[];
 }
+
+
 
 export default class Explore extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -31,15 +35,13 @@ export default class Explore extends React.Component<IProps, IState> {
     });
   };
   componentDidMount = () => {
+    console.log(get_explores())
     let authToken = sessionStorage.getItem("Auth Token");
     if (!authToken) {
       window.location.href = "/";
     }
   };
   render(): React.ReactNode {
-    // let data = this.state.usersData.en(e =>
-    //     <ExploreList {...e} />
-    // )
     return (
       <>
         <Header />

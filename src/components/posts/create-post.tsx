@@ -1,6 +1,6 @@
 import React from "react";
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, onValue, ref, set } from "firebase/database";
 import { getTimeStamp } from "../../helpers/helpers";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,6 +12,9 @@ interface IState {
   content: string;
   hasError: boolean;
   err: string;
+  username: string;
+  joinedUser: number;
+  photoUser: string;
 }
 export default class CreatePost extends React.Component<IProps, IState> {
   constructor(props: IProps) {
@@ -21,9 +24,22 @@ export default class CreatePost extends React.Component<IProps, IState> {
       content: "",
       hasError: false,
       err: "",
+      username: "",
+      joinedUser: 0,
+      photoUser: ""
     };
   }
+  componentDidMount() {
+    const currentUser = getAuth().currentUser;
+    const db = getDatabase();
+    const reference = ref(db, `users/${currentUser?.uid}`);
+    onValue(reference, (snapshot) => {
+      console.log(snapshot.val())
+     this.setState({username: snapshot.val().username, joinedUser: snapshot.val().joined}) 
+    }); 
+  }
   onsubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const currentUser = getAuth().currentUser;
     e.preventDefault();
     // getting authuser info
     let user = getAuth().currentUser;
@@ -40,11 +56,12 @@ export default class CreatePost extends React.Component<IProps, IState> {
         post_time: timestamp,
         title: this.state.title,
         user: user?.uid,
-        username: user?.displayName,
+        username: this.state.username,
+        joinedUser: this.state.joinedUser,
+        photoUser: `users/${currentUser?.uid}`
       })
         .then((res) => {
           console.log(res);
-
           toast.success("🤩 Wow, you post was saved!", {
             position: "bottom-left",
             autoClose: 5000,
