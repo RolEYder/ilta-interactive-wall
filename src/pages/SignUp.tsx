@@ -2,8 +2,14 @@ import React from "react";
 import { registerWithEmailAndPassword } from "../models/auth.controller";
 import { toast } from "../components/toast/ToastManagement";
 import SignUpModal from "../components/modals/signUpModal";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { getMessageFromErrorCode, getTimeStamp } from "../helpers/helpers";
+import bcrypt from "bcryptjs";
+import { auth } from "../config/firebaseConfig";
+import { getDatabase, ref, set } from "firebase/database";
+import { XIcon } from "@heroicons/react/outline";
 
-interface IProps { }
+interface IProps {}
 
 interface IState {
   username: string;
@@ -11,6 +17,8 @@ interface IState {
   password: string;
   repeatPassword: string;
   wasSuccess: boolean;
+  hasError: boolean;
+  errorCode: string;
 }
 
 export default class SingUp extends React.Component<IProps, IState> {
@@ -22,9 +30,11 @@ export default class SingUp extends React.Component<IProps, IState> {
       password: "",
       repeatPassword: "",
       wasSuccess: false,
+      hasError: false,
+      errorCode: "",
     };
   }
-  componentDidMount =  () => {
+  componentDidMount = () => {
     let authToken = sessionStorage.getItem("Auth Token");
     if (authToken) {
       window.location.href = "/home";
@@ -33,42 +43,60 @@ export default class SingUp extends React.Component<IProps, IState> {
 
   checkProperDataBeforeSubmit = () => {
     if (this.state.username.length < 5 === true) {
-      toast.show({
-        title: "Invalid username",
-        content: "You username must be at least of 6 characters",
-        duration: 5000,
+      this.setState({
+        hasError: true,
+        errorCode: "Invalid username. You must be at least of 6 characters",
       });
       return false;
     } else if ((this.state.password === this.state.repeatPassword) !== true) {
-      toast.show({
-        title: "Invalid password",
-        content: "You passwords does not match, check it again",
-        duration: 5000,
+      this.setState({
+        hasError: true,
+        errorCode:
+          "Invalid password. You passwords does not match, check it again",
       });
       return false;
     }
     return true;
   };
-  onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (this.checkProperDataBeforeSubmit() === true) {
-      let res = registerWithEmailAndPassword(
-        this.state.username,
-        this.state.email,
-        this.state.password
-      );
-      res.then((value) => {
-        this.setState({ wasSuccess: true });
-      });
+      try {
+        const joined = getTimeStamp();
+        let hashPassword = "";
+        const res = await createUserWithEmailAndPassword(
+          auth,
+          this.state.email,
+          this.state.password
+        );
+        const user = res.user;
+        bcrypt.hash(this.state.password, 10, (error: Object, hash: any) => {
+          hashPassword = hash;
+          const db = getDatabase();
+          set(ref(db, `users/${user.uid}`), {
+            uid: user.uid,
+            bio: "",
+            joined: joined,
+            username: this.state.username,
+            email: this.state.email,
+            password: hashPassword,
+          }).then(() => {
+            this.setState({ wasSuccess: true });
+          });
+          return user;
+        });
+      } catch (err: any) {
+        console.log(err.code);
+
+        this.setState({ hasError: true, errorCode: err.code });
+        console.log(this.state.errorCode);
+      }
     }
   };
   render(): React.ReactNode {
+   
     if (this.state.wasSuccess === true) {
-      <SignUpModal
-        willOpen={true}
-        title={"The account was created successfully"}
-        content={"Click on the button to log in"}
-      />;
+      window.location.href = "/login";
     }
     return (
       <>
@@ -184,12 +212,40 @@ export default class SingUp extends React.Component<IProps, IState> {
                   </a>
                 </div>
               </div>
-
+              {this.state.hasError ? (
+                <div className="bg-orange-600">
+                  <div className="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between flex-wrap">
+                      <div className="w-0 flex-1 flex items-keft">
+                        <p className="ml-3 font-medium text-white ">
+                          <span className="md:hidden">Error</span>
+                          <span className="hidden md:inline">
+                            {this.state.errorCode}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
+                        <button
+                          type="button"
+                          onClick={() => this.setState({ hasError: false })}
+                          className="-mr-1 flex p-2 rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-white sm:-mr-2"
+                        >
+                          <span className="sr-only">Dismiss</span>
+                          <XIcon
+                            className="h-6 w-6 text-white"
+                            aria-hidden="true"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
               <div>
                 <button
                   type="submit"
                   onClick={this.onSubmit}
-                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
                 >
                   <span className="absolute left-0 inset-y-0 flex items-center pl-3"></span>
                   Sign Up

@@ -14,6 +14,8 @@ const getMessageFromErrorCode = (errorCode: string) => {
       return "Login failed. Invalid email";
     case "auth/wrong-password":
       return "Login failed. Wrong password";
+    case "auth/email-already-in-use":
+      return "Sign up failed. Email already in use"
     case "email-already-in-use":
       return "Email already used. Go to login page.";
     case "ERROR_WRONG_PASSWORD":

@@ -167,7 +167,7 @@ export default class CreatePost extends React.Component<IProps, IState> {
                   </div>
                 ) : null}
                 <button
-                  className="bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200"
+                  className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
                   onClick={this.onsubmit}
                 >
                   Save

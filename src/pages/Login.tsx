@@ -144,11 +144,11 @@ export default class Login extends React.Component<IProps, IState> {
               </div>
 
               {hasError ? (
-                <div className="bg-indigo-600">
+                <div className="bg-orange-600">
                   <div className="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between flex-wrap">
                       <div className="w-0 flex-1 flex items-center">
-                        <p className="ml-3 font-medium text-white truncate">
+                        <p className="ml-3 font-medium text-white">
                           <span className="md:hidden">Error</span>
                           <span className="hidden md:inline">
                             {getMessageFromErrorCode(this.state.errorCode)}
@@ -177,7 +177,7 @@ export default class Login extends React.Component<IProps, IState> {
                 <button
                   onClick={this.onsubmit}
                   type="submit"
-                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
                 >
                   <span className="absolute left-0 inset-y-0 flex items-center pl-3"></span>
                   Sign in

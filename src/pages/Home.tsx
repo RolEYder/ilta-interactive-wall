@@ -85,7 +85,7 @@ export default function Home() {
             <button
               onClick={() => showModal()}
               type="button"
-              className="py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white  transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+              className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
             >
               Create Post
             </button>
@@ -93,7 +93,7 @@ export default function Home() {
               <CreatePost />
               <button
                 type="button"
-                className="text-white bg-gray-600 hover:bg-gray-700"
+                className="bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 border-b-4 border-gray-700 hover:border-gray-500 rounded"
                 onClick={() => hideModal()}
               >
                 Back
