@@ -5,7 +5,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="assets/logo.jpeg" alt="Logo" width="80" height="80">
+    <img src="assets/logo.jpeg" alt="Logo" width="250" height="250">
   </a>
 
   <h3 align="center">ITLA Intarctive Wall</h3>
