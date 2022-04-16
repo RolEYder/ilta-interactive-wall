@@ -127,6 +127,7 @@ export default function Home() {
             {post.map((v: any, i) => (
               <PostList
                 key={v.uid}
+                title={v.title}
                 photo={photo[i]}
                 username={v.username}
                 contect={v.content}

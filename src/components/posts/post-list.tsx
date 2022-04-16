@@ -18,6 +18,7 @@ interface IProps {
   likes?: 0;
   comments?: 0;
   photo?: string;
+  title?: string;
 }
 interface IState {}
 
@@ -41,7 +42,7 @@ export default function PostList(props: IProps) {
           <div className="">
             <div className="flex items-center justify-between">
               <h2 className="text-md font-semibold text-gray-900 -mt-1">
-                {props.username}{" "}
+                {props.title}  <span className="text-sm">by {props.username}{" "}</span>
               </h2>
               <small className="text-sm text-gray-700">
                 {<TimeAgo datetime={`${props.timeago}`} />}
