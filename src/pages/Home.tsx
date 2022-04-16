@@ -5,6 +5,7 @@ import CreatePost from "../components/posts/create-post";
 import useModal from "../hooks/useModal";
 import PostList from "../components/posts/post-list";
 import { getDatabase, onValue, ref } from "firebase/database";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function Home() {
   const { showModal, hideModal, visible } = useModal();
@@ -32,6 +33,22 @@ export default function Home() {
       }, 2000);
     });
   };
+  const isLogged = () => {
+    let authToken = sessionStorage.getItem("Auth Token");
+    if (!authToken) {
+      toast.error("Ooops! 😪, you must keep sure logged before post!", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+     showModal();
+    }
+  }
   useEffect(() => {
     getAllPost();
   }, []);
@@ -49,7 +66,7 @@ export default function Home() {
         <main>
           <div className="h-10 relative top-px flex justify-center ">
             <button
-              onClick={() => showModal()}
+              onClick={() => isLogged()}
               type="button"
               className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
             >
@@ -102,6 +119,17 @@ export default function Home() {
           )}
         </main>
       </div>
+      <ToastContainer
+          position="bottom-left"
+          autoClose={5000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
     </>
   );
 }

@@ -4,7 +4,7 @@ import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { Link } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 const userCur = getAuth().currentUser;
-console.log(userCur);
+let authToken = sessionStorage.getItem("Auth Token");
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
@@ -16,15 +16,27 @@ function SignOut() {
 }
 
 export default function Headeer() {
+  const [auth, setAuth] = useState("");
+
   const [user, setUser] = useState({ name: null, email: null });
-  const [navigation] = useState([
+  const [navigation, setNavigation] = useState([
     { name: "Home", href: "/home", current: false },
   ]);
-  const [userNavigation] = useState([
+  const [userNavigation, setUserNavigation] = useState([
     { name: "Your Profile", href: "/profile" },
     { name: "Sign out", href: "#" },
   ]);
+  const isLogged = () => {
+    let authToken: any = sessionStorage.getItem("Auth Token");
+    if (!authToken) {
+      setUserNavigation([]);
+      setNavigation([{ name: "Login", href: "/login", current: false }]);
+    }
+  };
   useEffect(() => {
+    let authToken: any = sessionStorage.getItem("Auth Token");
+    setAuth(authToken);
+    isLogged();
     const userCur: any = getAuth().currentUser;
     setUser({ name: userCur?.displayName, email: userCur?.email });
   }, [user]);
@@ -37,53 +49,55 @@ export default function Headeer() {
               <div className="flex items-center justify-between h-16">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <img
+                   <Link to={"/home"}> <img
                       className="h-8 w-8"
                       src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
                       alt="Workflow"
-                    />
+                    
+                    /></Link>
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">
-                      {navigation.map((item) => (
-                        <a
-                          key={item.name}
-                          href={item.href}
-                          className={classNames(
-                            item.current
-                              ? "bg-gray-900 text-white"
-                              : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                            "px-3 py-2 rounded-md text-sm font-medium"
-                          )}
-                          aria-current={item.current ? "page" : undefined}
-                        >
-                          {item.name}
-                        </a>
-                      ))}
+                      
+                    
                     </div>
                   </div>
                 </div>
                 <div className="hidden md:block">
                   <div className="ml-4 flex items-center md:ml-6">
-                    <a
+                    {authToken === null ? (<a
+                      type="button"
+                      href="/login"
+                      className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Log in
+                    </a>) : (<><a
                       type="button"
                       onClick={() => SignOut()}
                       className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
                     >
                       Sign Out
-                    </a>
+                    </a></>)}
+                    
 
                     {/* Profile dropdown */}
                     <Menu as="div" className="ml-3 relative">
                       <div>
-                        <Link to="/profile" replace={true}>
+                        {authToken === null ? (<Link to="/signup" replace={true}>
+                          <a
+                            type="button"
+                            className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                          >
+                            Sign up
+                          </a>
+                        </Link>) : (<Link to="/profile" replace={true}>
                           <a
                             type="button"
                             className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
                           >
                             Profile
                           </a>
-                        </Link>
+                        </Link>)}
                       </div>
                       <Transition
                         as={Fragment}
@@ -95,21 +109,27 @@ export default function Headeer() {
                         leaveTo="transform opacity-0 scale-95"
                       >
                         <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                          {userNavigation.map((item) => (
-                            <Menu.Item key={item.name}>
-                              {({ active }) => (
+                          {authToken ===  null ? (
+                            <>
+                              <Menu.Item key="1">
                                 <a
-                                  href={item.href}
-                                  className={classNames(
-                                    active ? "bg-gray-100" : "",
-                                    "block px-4 py-2 text-sm text-gray-700"
-                                  )}
+                                  href="/login"
+                                  className="bg-gray-100 block px-4 py-2 text-sm text-gray-700"
                                 >
-                                  {item.name}
+                                  Login
                                 </a>
-                              )}
-                            </Menu.Item>
-                          ))}
+                              </Menu.Item>
+                              <Menu.Item key="2">
+                                <a
+                                  href="/signup"
+                                  className="bg-gray-100 block px-4 py-2 text-sm text-gray-700"
+                                >
+                                  Signup
+                                </a>
+                              </Menu.Item>
+                            </>
+                          ) : null}
+                          
                         </Menu.Items>
                       </Transition>
                     </Menu>
@@ -131,22 +151,18 @@ export default function Headeer() {
 
             <Disclosure.Panel className="md:hidden">
               <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                {navigation.map((item) => (
-                  <Disclosure.Button
-                    key={item.name}
-                    as="a"
-                    href={item.href}
-                    className={classNames(
-                      item.current
-                        ? "bg-gray-900 text-white"
-                        : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                      "block px-3 py-2 rounded-md text-base font-medium"
-                    )}
-                    aria-current={item.current ? "page" : undefined}
-                  >
-                    {item.name}
-                  </Disclosure.Button>
-                ))}
+                {authToken !== null ? (
+                  <>
+                    <Disclosure.Button
+                      key="1"
+                      as="a"
+                      href="/home"
+                      className="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium"
+                    >
+                      Home
+                    </Disclosure.Button>
+                  </>
+                ) : (null)}
               </div>
               <div className="pt-4 pb-3 border-t border-gray-700">
                 <div className="flex items-center px-5">
@@ -164,7 +180,19 @@ export default function Headeer() {
                   ></button>
                 </div>
                 <div className="mt-3 px-2 space-y-1">
-                  <Disclosure.Button
+                 {authToken === null ? ( <><Disclosure.Button
+                    as="a"
+                    href="/login"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+                  >
+                    Log in 
+                  </Disclosure.Button><a
+                    onClick={() => SignOut()}
+                    href="/signup"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+                  >
+                      Sign up
+                    </a></>) : (<> <Disclosure.Button
                     as="a"
                     href="/profile"
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
@@ -176,7 +204,7 @@ export default function Headeer() {
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
                   >
                     Sign Out
-                  </a>
+                  </a></>)}
                 </div>
               </div>
             </Disclosure.Panel>
