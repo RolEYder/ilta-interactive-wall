@@ -43,7 +43,9 @@
 
 ## About The Project
 
-[![ITLA Interactive Wall][product-screenshot]](./assets/main.png)
+<a href="assets/main.png">
+    <img src="assets/main.png" alt="Main Page">
+  </a>
 
 The project was created as part of my last web programming assignment.
 
