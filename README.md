@@ -15,7 +15,7 @@
     <a href="https://github.com/RolEYder/ilta-interactive-wall"></a>
     <br />
     <br />
-    <a href="https://ilta-interactive-wall-ip5jbfgfg-roleyder02.vercel.app/">View Demo</a>
+    <a href="https://ilta-interactive-wall.vercel.app/">View Demo</a>
 </div>
 
 <!-- TABLE OF CONTENTS -->
