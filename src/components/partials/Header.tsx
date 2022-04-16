@@ -1,11 +1,10 @@
-import { Fragment, useEffect, useState} from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 import { getAuth } from "firebase/auth";
-const userCur = getAuth().currentUser
-console.log(userCur)
-
+const userCur = getAuth().currentUser;
+console.log(userCur);
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
@@ -13,24 +12,22 @@ function classNames(...classes: any[]) {
 
 function SignOut() {
   sessionStorage.removeItem("Auth Token");
-  window.location.href = "/"
+  window.location.href = "/";
 }
 
 export default function Headeer() {
-  const [user, setUser] = useState({name: null, email: null})
+  const [user, setUser] = useState({ name: null, email: null });
   const [navigation] = useState([
     { name: "Home", href: "/home", current: false },
-    { name: "Explore", href: "/explore", current: false },
-  ])
+  ]);
   const [userNavigation] = useState([
     { name: "Your Profile", href: "/profile" },
     { name: "Sign out", href: "#" },
-  ]
-  );
+  ]);
   useEffect(() => {
-    const userCur:any = getAuth().currentUser
-    setUser({name: userCur?.displayName, email: userCur?.email})
-  },[user])
+    const userCur: any = getAuth().currentUser;
+    setUser({ name: userCur?.displayName, email: userCur?.email });
+  }, [user]);
   return (
     <>
       <Disclosure as="nav" className="bg-gray-800">
@@ -68,7 +65,6 @@ export default function Headeer() {
                 </div>
                 <div className="hidden md:block">
                   <div className="ml-4 flex items-center md:ml-6">
-                   
                     <a
                       type="button"
                       onClick={() => SignOut()}
@@ -80,15 +76,14 @@ export default function Headeer() {
                     {/* Profile dropdown */}
                     <Menu as="div" className="ml-3 relative">
                       <div>
-                       <Link to="/profile" replace={true}>
-                       <a
-                      type="button"
-                      className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
-                    >
-                     Profile
-                    </a>
-                       </Link>
-                       
+                        <Link to="/profile" replace={true}>
+                          <a
+                            type="button"
+                            className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                          >
+                            Profile
+                          </a>
+                        </Link>
                       </div>
                       <Transition
                         as={Fragment}
@@ -155,7 +150,6 @@ export default function Headeer() {
               </div>
               <div className="pt-4 pb-3 border-t border-gray-700">
                 <div className="flex items-center px-5">
-                 
                   <div className="ml-3">
                     <div className="text-base font-medium leading-none text-white">
                       {user.name}
@@ -167,26 +161,22 @@ export default function Headeer() {
                   <button
                     type="button"
                     className="ml-auto bg-gray-800 flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                  >
-                   
-                  </button>
+                  ></button>
                 </div>
                 <div className="mt-3 px-2 space-y-1">
-                   <Disclosure.Button
-                      as="a"
-                      href="/profile"
-                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
-                    >
-                      Your Profile
-                    </Disclosure.Button>
-                    <a
-                    
-                    
-                      onClick={() => SignOut()}                      
-                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
-                    >
-                      Sign Out
-                    </a>
+                  <Disclosure.Button
+                    as="a"
+                    href="/profile"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+                  >
+                    Your Profile
+                  </Disclosure.Button>
+                  <a
+                    onClick={() => SignOut()}
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+                  >
+                    Sign Out
+                  </a>
                 </div>
               </div>
             </Disclosure.Panel>
