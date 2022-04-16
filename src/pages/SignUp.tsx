@@ -2,7 +2,7 @@ import React from "react";
 import { registerWithEmailAndPassword } from "../models/auth.controller";
 import { toast } from "../components/toast/ToastManagement";
 import SignUpModal from "../components/modals/signUpModal";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { getMessageFromErrorCode, getTimeStamp } from "../helpers/helpers";
 import bcrypt from "bcryptjs";
 import { auth } from "../config/firebaseConfig";
@@ -70,6 +70,7 @@ export default class SingUp extends React.Component<IProps, IState> {
           this.state.password
         );
         const user = res.user;
+       
         bcrypt.hash(this.state.password, 10, (error: Object, hash: any) => {
           hashPassword = hash;
           const db = getDatabase();
@@ -81,7 +82,10 @@ export default class SingUp extends React.Component<IProps, IState> {
             email: this.state.email,
             password: hashPassword,
           }).then(() => {
-            this.setState({ wasSuccess: true });
+            updateProfile(user, {displayName: this.state.username})
+              .then(() => {
+                this.setState({ wasSuccess: true });
+              })
           });
           return user;
         });
