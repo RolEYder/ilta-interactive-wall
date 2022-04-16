@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { getAuth } from "firebase/auth";
 import { getDatabase, onValue, ref, set } from "firebase/database";
 import { getTimeStamp } from "../../helpers/helpers";
@@ -6,6 +6,13 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { v4 as uuidv4 } from "uuid";
 import { XIcon } from "@heroicons/react/outline";
+import MDEditor from "@uiw/react-md-editor";
+import katex from "katex";
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import rehypeSanitize from "rehype-sanitize";
 interface IProps {}
 interface IState {
   title: string;
@@ -15,28 +22,35 @@ interface IState {
   username: string;
   joinedUser: number;
   photoUser: string;
+  language: string;
 }
+
 export default class CreatePost extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
       title: "",
-      content: "",
+      content: "**Support Markdown!!!**",
       hasError: false,
       err: "",
       username: "",
       joinedUser: 0,
-      photoUser: ""
+      photoUser: "",
+      language: "en",
     };
   }
+
   componentDidMount() {
     const currentUser = getAuth().currentUser;
     const db = getDatabase();
     const reference = ref(db, `users/${currentUser?.uid}`);
     onValue(reference, (snapshot) => {
-      console.log(snapshot.val())
-     this.setState({username: snapshot.val().username, joinedUser: snapshot.val().joined}) 
-    }); 
+      console.log(snapshot.val());
+      this.setState({
+        username: snapshot.val().username,
+        joinedUser: snapshot.val().joined,
+      });
+    });
   }
   onsubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     const currentUser = getAuth().currentUser;
@@ -58,7 +72,7 @@ export default class CreatePost extends React.Component<IProps, IState> {
         user: user?.uid,
         username: this.state.username,
         joinedUser: this.state.joinedUser,
-        photoUser: `users/${currentUser?.uid}`
+        photoUser: `users/${currentUser?.uid}`,
       })
         .then((res) => {
           console.log(res);
@@ -101,7 +115,7 @@ export default class CreatePost extends React.Component<IProps, IState> {
                       <input
                         type="text"
                         onChange={(e) =>
-                          this.setState({ title: e.target.value })
+                          this.setState({ title: e.currentTarget.value })
                         }
                         value={this.state.title}
                         name="post-title"
@@ -122,19 +136,72 @@ export default class CreatePost extends React.Component<IProps, IState> {
                     You post...
                   </label>
                   <div className="mt-1">
-                    <textarea
-                      id="post"
-                      onChange={(e) =>
-                        this.setState({ content: e.target.value })
-                      }
-                      value={this.state.content}
-                      name="post"
-                      rows={3}
-                      className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
-                      placeholder="You post.."
-                      defaultValue={""}
-                      required
-                    />
+                    <div className="container">
+                      <MDEditor
+                        previewOptions={{
+                          rehypePlugins: [[rehypeSanitize, rehypeKatex]],
+                          remarkPlugins: [
+                            [remarkGfm, rehypeHighlight, remarkMath],
+                          ],
+                          components: {
+                            code: ({
+                              inline,
+                              children = [],
+                              className,
+                              ...props
+                            }) => {
+                              const txt = children[0] || "";
+                              if (inline) {
+                                if (
+                                  typeof txt === "string" &&
+                                  /^\$\$(.*)\$\$/.test(txt)
+                                ) {
+                                  const html = katex.renderToString(
+                                    txt.replace(/^\$\$(.*)\$\$/, "$1"),
+                                    {
+                                      throwOnError: false,
+                                    }
+                                  );
+                                  return (
+                                    <code
+                                      dangerouslySetInnerHTML={{ __html: html }}
+                                    />
+                                  );
+                                }
+                                return <code>{txt}</code>;
+                              }
+                              if (
+                                typeof txt === "string" &&
+                                typeof className === "string" &&
+                                /^language-katex/.test(
+                                  className.toLocaleLowerCase()
+                                )
+                              ) {
+                                const html = katex.renderToString(txt, {
+                                  throwOnError: false,
+                                });
+                                return (
+                                  <code
+                                    dangerouslySetInnerHTML={{ __html: html }}
+                                  />
+                                );
+                              }
+                              return (
+                                <code className={String(className)}>{txt}</code>
+                              );
+                            },
+                          },
+                        }}
+                        value={this.state.content}
+                        onChange={(text: any) => {
+                          this.setState({ content: text });
+                        }}
+                      />
+                      <MDEditor.Markdown
+                        source={this.state.content}
+                        rehypePlugins={[[rehypeSanitize]]}
+                      />
+                    </div>
                   </div>
                 </div>
                 {hasError ? (
