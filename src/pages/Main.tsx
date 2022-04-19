@@ -182,8 +182,9 @@ export default function Main() {
               A better way see what's going on at ITLA
             </p>
             <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-              Lorem ipsum dolor sit amet consect adipisicing elit. Possimus
-              magnam voluptatum cupiditate veritatis in accusamus quisquam.
+            TLA Interactive Wall supports a lot of properties such as markdown types .
+You should be able to post more styled moments using those types in order to spotlight them. Got ahead and get started to see what’s happening at ITLA 😉, what are you waiting for? 💪
+
             </p>
           </div>
 
