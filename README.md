@@ -80,26 +80,26 @@ Below is an example of how to install and set up the project successfully.
    ```sh
    npm install
    ```
-3. You must configure your Firebase SDK. Firstly, install Firebase:
+
+
+3. Then create a file `.env` at the root project location and replace for your own configuration
+
+```bash
+REACT_APP_FIREBASE_API_KEY = ""
+REACT_APP_FIREBASE_AUTH_DOMAIN = ""
+REACT_APP_FIREBASE_DATABASE_URL = ""
+REACT_APP_FIREBASE_PROJECT_ID = ""
+REACT_APP_FIREBASE_STORAGE_BUCKET = ""
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID = ""
+REACT_APP_FIREBASE_APP_ID = ""
+REACT_APP_FIREBASE_MEASUREMENT_ID = "" 
+```
+4. Run the app
 
 ```sh
-npm install firebase
+npm run start
 ```
-
-Then in `firebaseConfig.js` replace your own configuration
-
-```javascript
-const firebaseConfig = {
-  apiKey: "REACT_APP_FIREBASE_API_KEY",
-  authDomain: "REACT_APP_FIREBASE_AUTH_DOMAIN",
-  databaseURL: "REACT_APP_FIREBASE_DATABASE_URL",
-  projectId: "REACT_APP_FIREBASE_PROJECT_ID",
-  storageBucket: "REACT_APP_FIREBASE_STORAGE_BUCKET",
-  messagingSenderId: "REACT_APP_FIREBASE_MESSAGING_SENDER_ID",
-  appId: "REACT_APP_FIREBASE_MEASUREMENT_ID",
-  measurementId: "G-G1MNG0GNH6",
-};
-```
+and open the app at localhost:3000
 
 <!-- LICENSE -->
 
