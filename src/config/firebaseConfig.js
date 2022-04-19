@@ -2,43 +2,35 @@
 import { initializeApp } from "firebase/app";
 import {
     getAuth,
-    signInWithPopup,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    sendPasswordResetEmail,
-    signOut,
+    createUserWithEmailAndPassword
 } from "firebase/auth";
 import {
     getFirestore,
-    getDocs,
-    query,
     collection,
-    where,
     addDoc,
 } from "firebase/firestore";
-import { getDatabase, ref, child, set } from "firebase/database";
-import { onAuthStateChanged } from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
 import { useContext, createContext, useEffect, useState } from "react";
 import 'firebase/storage'
 import { getStorage } from "firebase/storage";
 export const AuthContext = createContext();
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAqKsoULF8ZzX2vqJEV4gRANumeyuqdQQc",
+    apiKey: `${process.env.REACT_APP_FIREBASE_API_KEY}`,
 
-    authDomain: "ilta-interactive-wall.firebaseapp.com",
+    authDomain: `${process.env.REACT_APP_FIREBASE_AUTH_DOMAIN}`,
 
-    databaseURL: "https://ilta-interactive-wall-default-rtdb.firebaseio.com",
+    databaseURL: `${process.env.REACT_APP_FIREBASE_DATABASE_URL}`,
 
-    projectId: "ilta-interactive-wall",
+    projectId: `${process.env.REACT_APP_FIREBASE_PROJECT_ID }`,
 
-    storageBucket: "ilta-interactive-wall.appspot.com",
+    storageBucket: `${process.env.REACT_APP_FIREBASE_STORAGE_BUCKET}`,
 
-    messagingSenderId: "351875502945",
+    messagingSenderId: `${process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID}`,
 
-    appId: "1:351875502945:web:567a64a043cf37f353ab20",
+    appId: `${process.env.REACT_APP_FIREBASE_APP_ID}`,
 
-    measurementId: "G-G1MNG0GNH6",
+    measurementId: `${process.env.REACT_APP_FIREBASE_MEASUREMENT_ID}`,
 };
 
 
