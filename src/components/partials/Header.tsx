@@ -3,12 +3,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { Link } from "react-router-dom";
 import { getAuth } from "firebase/auth";
-const userCur = getAuth().currentUser;
 let authToken = sessionStorage.getItem("Auth Token");
-
-function classNames(...classes: any[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 function SignOut() {
   sessionStorage.removeItem("Auth Token");
@@ -49,55 +44,63 @@ export default function Headeer() {
               <div className="flex items-center justify-between h-16">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                   <Link to={"/home"}> <img
-                      className="h-8 w-8"
-                      src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                      alt="Workflow"
-                    
-                    /></Link>
+                    <Link to={"/home"}>
+                      {" "}
+                      <img
+                        className="h-8 w-8"
+                        src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
+                        alt="Workflow"
+                      />
+                    </Link>
                   </div>
                   <div className="hidden md:block">
-                    <div className="ml-10 flex items-baseline space-x-4">
-                      
-                    
-                    </div>
+                    <div className="ml-10 flex items-baseline space-x-4"></div>
                   </div>
                 </div>
                 <div className="hidden md:block">
                   <div className="ml-4 flex items-center md:ml-6">
-                    {authToken === null ? (<a
-                      type="button"
-                      href="/login"
-                      className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
-                    >
-                      Log in
-                    </a>) : (<><a
-                      type="button"
-                      onClick={() => SignOut()}
-                      className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
-                    >
-                      Sign Out
-                    </a></>)}
-                    
+                    {authToken === null ? (
+                      <a
+                        type="button"
+                        href="/login"
+                        className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                      >
+                        Log in
+                      </a>
+                    ) : (
+                      <>
+                        <a
+                          type="button"
+                          onClick={() => SignOut()}
+                          className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                        >
+                          Sign Out
+                        </a>
+                      </>
+                    )}
 
                     {/* Profile dropdown */}
                     <Menu as="div" className="ml-3 relative">
                       <div>
-                        {authToken === null ? (<Link to="/signup" replace={true}>
-                          <a
-                            type="button"
-                            className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
-                          >
-                            Sign up
-                          </a>
-                        </Link>) : (<Link to="/profile" replace={true}>
-                          <a
-                            type="button"
-                            className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
-                          >
-                            Profile
-                          </a>
-                        </Link>)}
+                        {authToken === null ? (
+                          <Link to="/signup" replace={true}>
+                            <a
+                              type="button"
+                              className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                            >
+                              Sign up
+                            </a>
+                          </Link>
+                        ) : (
+                          <Link to="/profile" replace={true}>
+                            <a
+                              type="button"
+                              className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                            >
+                              Profile
+                            </a>
+                          </Link>
+                        )}
                       </div>
                       <Transition
                         as={Fragment}
@@ -109,7 +112,7 @@ export default function Headeer() {
                         leaveTo="transform opacity-0 scale-95"
                       >
                         <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                          {authToken ===  null ? (
+                          {authToken === null ? (
                             <>
                               <Menu.Item key="1">
                                 <a
@@ -129,7 +132,6 @@ export default function Headeer() {
                               </Menu.Item>
                             </>
                           ) : null}
-                          
                         </Menu.Items>
                       </Transition>
                     </Menu>
@@ -162,7 +164,7 @@ export default function Headeer() {
                       Home
                     </Disclosure.Button>
                   </>
-                ) : (null)}
+                ) : null}
               </div>
               <div className="pt-4 pb-3 border-t border-gray-700">
                 <div className="flex items-center px-5">
@@ -180,31 +182,41 @@ export default function Headeer() {
                   ></button>
                 </div>
                 <div className="mt-3 px-2 space-y-1">
-                 {authToken === null ? ( <><Disclosure.Button
-                    as="a"
-                    href="/login"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
-                  >
-                    Log in 
-                  </Disclosure.Button><a
-                    onClick={() => SignOut()}
-                    href="/signup"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
-                  >
-                      Sign up
-                    </a></>) : (<> <Disclosure.Button
-                    as="a"
-                    href="/profile"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
-                  >
-                    Your Profile
-                  </Disclosure.Button>
-                  <a
-                    onClick={() => SignOut()}
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
-                  >
-                    Sign Out
-                  </a></>)}
+                  {authToken === null ? (
+                    <>
+                      <Disclosure.Button
+                        as="a"
+                        href="/login"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+                      >
+                        Log in
+                      </Disclosure.Button>
+                      <a
+                        onClick={() => SignOut()}
+                        href="/signup"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+                      >
+                        Sign up
+                      </a>
+                    </>
+                  ) : (
+                    <>
+                      {" "}
+                      <Disclosure.Button
+                        as="a"
+                        href="/profile"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+                      >
+                        Your Profile
+                      </Disclosure.Button>
+                      <a
+                        onClick={() => SignOut()}
+                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+                      >
+                        Sign Out
+                      </a>
+                    </>
+                  )}
                 </div>
               </div>
             </Disclosure.Panel>

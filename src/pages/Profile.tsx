@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, onValue, update } from "firebase/database";
-import { XIcon } from "@heroicons/react/outline";
 import Header from "../components/partials/Header";
 import CardProfile from "../components/profile/card-profile";
 import {
@@ -34,10 +33,6 @@ export default function Profile() {
       username: user.username,
       bio: bio.bio,
     });
-
-    function isImage(file: any) {
-      return file && file["type"].split("/")[0] === "image";
-    }
 
     // saving image
     const storage = getStorage();

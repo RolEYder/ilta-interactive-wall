@@ -1,15 +1,9 @@
-/* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useEffect } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import {
-  AnnotationIcon,
-  GlobeAltIcon,
-  LightningBoltIcon,
-  ScaleIcon,
-} from "@heroicons/react/outline";
+import { GlobeAltIcon, ScaleIcon } from "@heroicons/react/outline";
 import { useNavigate } from "react-router";
-import image from "./images/main.png"
+import image from "./images/main.png";
 const navigation = [{ name: "Feactures", href: "#" }];
 
 const features = [
@@ -24,7 +18,7 @@ const features = [
     description:
       "LaTeX is a high-quality typesetting system; it includes features to write complex math equations, physics, chemestry, and so on. ",
     icon: ScaleIcon,
-  }
+  },
 ];
 export default function Main() {
   let navigate = useNavigate();
@@ -152,8 +146,8 @@ export default function Main() {
                   </span>
                 </h1>
                 <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                ITLA Interactive Wall is a web app that allows users to post moments and happenings that occur at the ITLA institute. 
-
+                  ITLA Interactive Wall is a web app that allows users to post
+                  moments and happenings that occur at the ITLA institute.
                 </p>
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                   <div className="rounded-md shadow">

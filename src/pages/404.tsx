@@ -1,5 +1,4 @@
 
-import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import image from "./images/404.svg";
 export default function NotFoundPage() {

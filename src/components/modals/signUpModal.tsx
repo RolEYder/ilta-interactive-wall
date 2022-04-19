@@ -1,16 +1,16 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment, useState } from "react";
 
 interface IProps {
-    willOpen: boolean,
-    title?: string, 
-    content?: string
+  willOpen: boolean;
+  title?: string;
+  content?: string;
 }
 export default function SignUpModal(props: IProps) {
-  let [isOpen, setIsOpen] = useState(props.willOpen)
+  let [isOpen, setIsOpen] = useState(props.willOpen);
 
   function closeModal() {
-    setIsOpen(false)
+    setIsOpen(false);
   }
   return (
     <>
@@ -57,9 +57,7 @@ export default function SignUpModal(props: IProps) {
                   {props.title}
                 </Dialog.Title>
                 <div className="mt-2">
-                  <p className="text-sm text-gray-500">
-                    {props.content}
-                  </p>
+                  <p className="text-sm text-gray-500">{props.content}</p>
                 </div>
 
                 <div className="mt-4">
@@ -77,5 +75,5 @@ export default function SignUpModal(props: IProps) {
         </Dialog>
       </Transition>
     </>
-  )
+  );
 }
